@@ -1,5 +1,5 @@
 /*Ginger Judge 2.0 Linear Actuator Control
-   Author: Mazlin Higee
+   Author: Mazlin Higbee
       Help from: Jeff Thor, Nick Dos Santos
 
    This code enables control from a pixhawk running ArduPilot
