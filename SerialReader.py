@@ -41,6 +41,8 @@ def saveString(s):
 		elif key =="$turb":
 			#add to turb
 			turb.append(value.rstrip())
+		elif key =="$wind":
+			wind.append(value.rstrip())
 			
 def read_temp_raw():
 	catdata = subprocess.Popen(['cat',device_file], 
@@ -94,13 +96,14 @@ while True:
 	now = datetime.datetime.now()
 	if ser.in_waiting > 0:
 		curLine = ser.readline();
-		#print(curLine)
+		print(curLine)
 		saveString(curLine);
 		piSensorRead()
-		print("temp: " + str(temp[-1:]))	 
-		print("pH: " + str(ph[-1:]))
-		print("turb: " + str(turb[-1:]))
-		
+		#print("temp: " + str(temp[-1:]))	 
+		#print("pH: " + str(ph[-1:]))
+		#print("turb: " + str(turb[-1:]))
+		#print("wind: " + str(wind[-1:]))
+		print(wind)
 		
 		
 	#get info from sensors on the pi
