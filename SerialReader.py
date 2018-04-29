@@ -9,6 +9,17 @@ import sys
 import re
 import time
 import subprocess
+import mysql
+
+
+#database creds
+config = {
+  'user': 'root',
+  'password': '',
+  'host': '127.0.0.1',
+  'database': 'gj2',
+  'raise_on_warnings': True,
+}
 
 
 ph = []
@@ -73,10 +84,23 @@ def piSensorRead():
 			
 #write avg's to the database...			
 def writeToDB():
-	print("")
+	print("Writing to the database  " +"Time: " + str(now.hour) + ":" + str(now.minute))
+	cnx = mysql.connector.connect(**config)
+	now = datetime.datetime.now()
+	cursor = cnx.cursor()
+	query = ("INSERT INTO sensor_data VALUES (%s, %s, %s, %s, %s,%s, %s, %s, %s, %s)")
+	data_query = (0,100,now,-1,-1, 7.2,69,4,5,30)
+	cursor.execute(query,data_query)
+
+	# Make sure data is committed to the database
+	cnx.commit()
+	cursor.close()     
 	
 	
 	
+	
+	cnx.close()
+	print("Closing connection to DB")
 
 
 
@@ -111,7 +135,6 @@ while True:
 	#we are on a time that is divisible by 5 lets write to the db
 		
 	if now.minute % 5 == 0 and dblock == False: 
-		print("Writing to the database  " +"Time: " + str(now.hour) + ":" + str(now.minute))
 		dblock = True
 		writeToDB()
 		#write to database on a different thread 
