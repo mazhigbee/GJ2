@@ -10,7 +10,6 @@ create table sensor_data (
 	id int not null auto_increment,
 	battery_percent float not null,
 	sample_time datetime not null,
-	lat int not null,
 	latitude int not null,
 	longitude int not null,
 	ph float not null,
@@ -18,7 +17,6 @@ create table sensor_data (
 	wind_speed float not null,
 	turbitity float not null,
 	dissolved_o float not null,
-	notes varchar(2500),
 	PRIMARY KEY (id)
 );
 

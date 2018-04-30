@@ -14,8 +14,8 @@ import mysql
 
 #database creds
 config = {
-  'user': 'root',
-  'password': '',
+  'user': 'ginger',
+  'password': 'ginger',
   'host': '127.0.0.1',
   'database': 'gj2',
   'raise_on_warnings': True,
@@ -76,29 +76,32 @@ def read_temp():
         temp_f = temp_c * 9.0 / 5.0 + 32.0
         #print(temp_f)
         return temp_f#, temp_c
-        
-#read wind and temp from sensors connected to raspi
-def piSensorRead():
-	temp.append(read_temp())
-	#wind.append(read_wind)
+        	
+def takeAvg(list):
+	avg = sum(list) / float(len(list)
+	return avg
 			
 #write avg's to the database...			
 def writeToDB():
 	print("Writing to the database  " +"Time: " + str(now.hour) + ":" + str(now.minute))
+	
+	
 	cnx = mysql.connector.connect(**config)
 	now = datetime.datetime.now()
 	cursor = cnx.cursor()
 	query = ("INSERT INTO sensor_data VALUES (%s, %s, %s, %s, %s,%s, %s, %s, %s, %s)")
-	data_query = (0,100,now,-1,-1, 7.2,69,4,5,30)
+	data_query = (battery,now,lat,longitude,takeAvg(ph),takeAvg(temp),takeAvg(wind),takeAvg(turb),takeAvg(dissolved_o))
 	cursor.execute(query,data_query)
 
 	# Make sure data is committed to the database
 	cnx.commit()
+	#after we commit we should reset the lists
+	ph = []
+	turb = []
+	temp = []
+	wind = []
+	dissolved_o = []
 	cursor.close()     
-	
-	
-	
-	
 	cnx.close()
 	print("Closing connection to DB")
 
@@ -122,18 +125,15 @@ while True:
 		curLine = ser.readline();
 		print(curLine)
 		saveString(curLine);
-		piSensorRead()
+		temp.append(read_temp())
 		#print("temp: " + str(temp[-1:]))	 
 		#print("pH: " + str(ph[-1:]))
 		#print("turb: " + str(turb[-1:]))
 		#print("wind: " + str(wind[-1:]))
-		print(wind)
+		#print(wind)
 		
-		
-	#get info from sensors on the pi
-	#piSensorRead()
+
 	#we are on a time that is divisible by 5 lets write to the db
-		
 	if now.minute % 5 == 0 and dblock == False: 
 		dblock = True
 		writeToDB()
