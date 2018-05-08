@@ -19,12 +19,12 @@ const int button2Pin = 4;     // the number of the pushbutton2 pin
 const int relay1Pin =  7;      // the number of the Realy1 pin white
 const int relay2Pin =  8;      // the number of the Relay2 pin red
 const int sensorPin = 0;    // select the input pin for the potentiometer
-const int pix = 3;
+const int pix = 3;          //pwm pin for pixhawk
 
 // variables will change:
 int button1State = 0;         // variable for reading the pushbutton status
 int button2State = 0;         // variable for reading the pushbutton status
-double sensorValue = 0;  // variable to store the value coming from the sensor
+double sensorValue = 0;  // variable to store the value coming from the actuator
 double positionInches = 0; //position of the linear actuator
 double setPosition = 0; //the position we want to set the actuator too
 bool retracting = false; //the actuator is retracting
@@ -58,6 +58,14 @@ void loop() {
   // read the value from the sensor:
   positionInches = analogRead(sensorPin);
 
+  /**
+   * Expected pixhawk values
+   * 1100 left
+   * 1500 center
+   * 1900 right
+   */
+
+
   setPosition = pulseIn(pix, HIGH);
   //calc offset to normalize values from pixhawk to output on actuator
   double temp = setPosition;
@@ -65,7 +73,7 @@ void loop() {
   setPosition = setPosition / 1.616;
   setPosition = setPosition + 140;
 
-//  Serial.print("pix val: ");
+  Serial.print("pix val: ");
   Serial.print(temp);
   Serial.print(" PosIN: ");
   Serial.print(positionInches);
